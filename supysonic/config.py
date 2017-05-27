@@ -43,6 +43,16 @@ def check():
 
 def get(section, name):
 	try:
+		ret = config.read([ '/etc/supysonic', os.path.expanduser('~/.supysonic') ])
+	except (ConfigParser.MissingSectionHeaderError, ConfigParser.ParsingError), e:
+		print >>sys.stderr, "Error while parsing the configuration file(s):\n%s" % str(e)
+		return False
+
+	if not ret:
+		print >>sys.stderr, "No configuration file found"
+		return False
+
+	try:
 		return config.get(section, name)
 	except:
 		return None
